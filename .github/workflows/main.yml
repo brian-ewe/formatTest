@@ -3,23 +3,20 @@ name: Prettier
 on: [push]
 
 jobs:
-  build:
-    name: Prettier
-    runs-on: ubuntu-latest
-    env: 
-      CI_COMMIT_MESSAGE: Continuous Integration Build Artifacts
-      CI_COMMIT_AUTHOR: Continuous Integration
-    steps:
-      - uses: actions/checkout@v2 # Updated to use v2 for better performance and features
-      - uses: bahmutov/npm-install@v1
+    build:
+        name: Prettier
+        runs-on: ubuntu-latest
+        env:
+            CI_COMMIT_MESSAGE: Continuous Integration Build Artifacts
+            CI_COMMIT_AUTHOR: Continuous Integration
+        steps:
+            - uses: actions/checkout@v2 # Updated to use v2 for better performance and features
+            - uses: bahmutov/npm-install@v1
 
-      - name: Run Prettier
-        run: npx prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol'
-        
-      - name: GIT Commit Build Artifacts (coverage, dist, devdist, docs)
-        run: |
-          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-          git config --global user.email "username@users.noreply.github.com"
-          git add . # Ensures all changes are staged
-          git commit -m "${{ env.CI_COMMIT_MESSAGE }}" || echo "No changes to commit"
-          git push
+            - name: Run Prettier
+              run: npx prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol'
+
+            - uses: mikeal/publish-to-github-action@master
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  BRANCH_NAME: "main" #optional defaults to master
