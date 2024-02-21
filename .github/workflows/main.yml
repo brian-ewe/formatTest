@@ -16,6 +16,9 @@ jobs:
             - name: Run Prettier
               run: npx prettier --write --plugin=prettier-plugin-solidity 'contracts/**/*.sol'
 
+              - name: Run Hardhat TEst
+              run: npx hardhat test
+
             - name: GIT Commit Build Artifacts (coverage, dist, devdist, docs)
               run: |
                   git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
